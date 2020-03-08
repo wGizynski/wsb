@@ -27,6 +27,13 @@ SHOW;
         Naziwsko: $surname
         <hr>s
 SHOW;
+
+//now doc
+$name = "Anna";
+echo <<< 'X'
+imię: $name
+X;
+
     ?>
 </body>
 

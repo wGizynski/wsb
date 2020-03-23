@@ -24,9 +24,9 @@
 
 /* Slideshow container */
 .slideshow-container {
-width: 80%;
-  position: relative;
-  margin: auto;
+  width: 80%;
+  position: center;
+  margin: 50;
 }
 
 /* Hide the images by default */
@@ -113,4 +113,14 @@ width: 80%;
 @keyframes fade {
   from {opacity: .4}
   to {opacity: 1}
+}
+
+table, th, tr, td{
+  border: solid 1px grey;
+  padding: 8px;
+  border-collapse: collapse;
+  text-align: center;
+}
+td{
+  width: 100px;
 }

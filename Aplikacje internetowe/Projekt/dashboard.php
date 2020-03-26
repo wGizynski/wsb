@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (isset($_SESSION['user_id'])) {
+} else {
+    header("Location: index.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,15 +21,41 @@
     <link href="css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 </head>
 
 <body>
-    <header></header>
+    <?php
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "WSBank";
 
+    // Create connection
+    $conn = mysqli_connect($servername, $username, $password, $dbname);
+    // Check connection
+    if (!$conn) {
+        die("Connection failed: " . mysqli_connect_error());
+    }
+
+    $sql = "SELECT sum(ilosc) FROM transakcje where $_SESSION[user_id]=ID_To;";
+    $result = mysqli_query($conn, $sql);
+    if (mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_row($result)) {
+            foreach ($row as $field => $value) {
+                if($value==0) $_SESSION["ilosc"] = $value. " zł";
+                else $_SESSION["ilosc"] = "0 zł";
+            }
+        }
+    }
+    else $_SESSION["ilosc"] = "0 zł";
+    ?>
+
+    <header></header>
     <section id="content">
         <section id="top">
             <section id="top_left"> </section>
-            <section id="top_middle"> </section>
+            <section id="top_middle"> <a href="index.php"> <img src="imgs/banner2.jpg"></a> </section>
             <section id="top_right"> </section>
         </section>
 
@@ -46,6 +79,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" style="color:whitesmoke" href="#">Pomoc i kontakt</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" style="color:whitesmoke" href="history.php">Historia</a>
+                            </li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li><a href="logout.php" class="nav-link" style="color:whitesmoke"> wyloguj sie</a></li>
@@ -58,23 +94,22 @@
 
                 </div>
                 <div style="margin-left:5px">
-                    <a class="badge badge-primary" style="color:white">Primary</a>
-                    <a class="badge badge-success"style="color:white">Success</a>
-                    <a class="badge badge-danger"style="color:white">Danger</a>
-                    <a class="badge badge-info"style="color:white">Info</a>
-                    <a class="badge badge-dark"style="color:white">Dark</a>
+                    <a class="badge badge-primary" style="color:white">#pieniadze</a>
+                    <a class="badge badge-success" style="color:white">#konto</a>
+                    <a class="badge badge-danger" style="color:white">#bank</a>
+                    <a class="badge badge-info" style="color:white">#kredyt</a>
+                    <a class="badge badge-dark" style="color:white">#wsbank</a>
                 </div>
 
                 <div class="row" style="margin-top:20px">
 
-                    <!-- Earnings (Monthly) Card Example -->
                     <div class="col-xl-3 col-md-6 mb-4">
                         <div class="card border-left-primary shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Wpływy (ten miesiąc)</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">10,000zł</div>
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Stan konta</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $_SESSION["srodki"]; ?></div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -84,14 +119,13 @@
                         </div>
                     </div>
 
-                    <!-- Earnings (Monthly) Card Example -->
                     <div class="col-xl-3 col-md-6 mb-4">
                         <div class="card border-left-success shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-warning    text-uppercase mb-1">Wydatki (ten miesiąc)</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">5,000zł</div>
+                                        <div class="text-xs font-weight-bold text-warning    text-uppercase mb-1">Wpływy (ten miesiąc)</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $_SESSION["ilosc"]; ?></div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -101,13 +135,12 @@
                         </div>
                     </div>
 
-                    <!-- Earnings (Monthly) Card Example -->
                     <div class="col-xl-3 col-md-6 mb-4">
                         <div class="card border-left-info shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks</div>
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Wydatki (ten miesiąc)</div>
                                         <div class="row no-gutters align-items-center">
                                             <div class="col-auto">
                                                 <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
@@ -127,13 +160,12 @@
                         </div>
                     </div>
 
-                    <!-- Pending Requests Card Example -->
                     <div class="col-xl-3 col-md-6 mb-4">
                         <div class="card border-left-warning shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Requests</div>
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">?</div>
                                         <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
                                     </div>
                                     <div class="col-auto">

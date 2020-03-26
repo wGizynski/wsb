@@ -57,12 +57,11 @@
     // Validate credentials
     if (empty($username_err) && empty($password_err)) {
       // Prepare a select statement
-      $sql = "SELECT id, username, password FROM users WHERE username = ?";
+      $sql = "SELECT user_id, username, srodki, password FROM users WHERE username = ?";
 
       if ($stmt = mysqli_prepare($link, $sql)) {
         // Bind variables to the prepared statement as parameters
         mysqli_stmt_bind_param($stmt, "s", $param_username);
-
         // Set parameters
         $param_username = $username;
 
@@ -74,7 +73,7 @@
           // Check if username exists, if yes then verify password
           if (mysqli_stmt_num_rows($stmt) == 1) {
             // Bind result variables
-            mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password);
+            mysqli_stmt_bind_result($stmt, $user_id, $username, $srodki, $hashed_password);
             if (mysqli_stmt_fetch($stmt)) {
               if (password_verify($password, $hashed_password)) {
                 // Password is correct, so start a new session
@@ -82,8 +81,9 @@
 
                 // Store data in session variables
                 $_SESSION["loggedin"] = true;
-                $_SESSION["id"] = $id;
-                $_SESSION["username"] = $username;
+                $_SESSION["user_id"] = $user_id;
+                $_SESSION["login_user"] = $username;
+                $_SESSION["srodki"] = $srodki;
 
                 // Redirect user to welcome page
                 header("location: dashboard.php");
@@ -179,16 +179,15 @@
                   Przygotowaliśmy dla Ciebie specjalną ofertę pożyczki....</p>
               </li>
               <li>
-                <a href="#">21 000 Job Seekers</a>
+                <a href="#">100 zł za założenie konta</a>
                 <a href="#" class="float-right">12 marzec 2020</a>
-                <p>Curabitur purus sem, malesuada eu luctus eget, suscipit sed turpis. Nam pellentesque felis vitae
-                  justo accumsan, sed semper nisi sollicitudin...</p>
+                <p>Dołącz do nas już teraz i zyskaj 100zł extra za darmo!...</p>
               </li>
               <li>
-                <a href="#">Awesome Employers</a>
+                <a href="#">Zupełenie randomowe wyrazy</a>
                 <a href="#" class="float-right">05 luty 2020</a>
-                <p>Fusce ullamcorper ligula sit amet quam accumsan aliquet. Sed nulla odio, tincidunt vitae nunc vitae,
-                  mollis pharetra velit. Sed nec tempor nibh...</p>
+                <p>Bułka, kiebłasa, krety, szczotka, telefon, nośniki danych, data, auto, stożek, trawa,
+                  pszczółki, septagon, octagon, dokąd nocą tupta jeż? wiesz? nie wiesz...</p>
               </li>
             </ul>
           </div>

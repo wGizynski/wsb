@@ -1,0 +1,16 @@
+#content{
+  width: 1800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table, th, tr, td{
+  border: solid 1px grey;
+  padding: 8px;
+  border-collapse: collapse;
+  text-align: center;
+}
+td{
+  width: 100px;
+}
+

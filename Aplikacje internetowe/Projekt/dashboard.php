@@ -38,17 +38,29 @@ if (isset($_SESSION['user_id'])) {
         die("Connection failed: " . mysqli_connect_error());
     }
 
-    $sql = "SELECT sum(ilosc) FROM transakcje where $_SESSION[user_id]=ID_To;";
+    $sql = "SELECT sum(ilosc) FROM transakcje where $_SESSION[user_id]=ID_To and MONTH(data) = MONTH(CURRENT_DATE())
+    AND YEAR(data) = YEAR(CURRENT_DATE());";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_row($result)) {
             foreach ($row as $field => $value) {
-                if($value==0) $_SESSION["ilosc"] = $value. " zł";
-                else $_SESSION["ilosc"] = "0 zł";
+                if ($value != "") $_SESSION["wplywy"] = $value;
+                else $_SESSION["wplywy"] = 0;
             }
         }
-    }
-    else $_SESSION["ilosc"] = "0 zł";
+    } else $_SESSION["wplywy"] = "0 zł";
+
+    $sql2 = "SELECT sum(ilosc) FROM transakcje where $_SESSION[user_id]=ID_From and MONTH(data) = MONTH(CURRENT_DATE())
+    AND YEAR(data) = YEAR(CURRENT_DATE());";
+    $result2 = mysqli_query($conn, $sql2);
+    if (mysqli_num_rows($result2) > 0) {
+        while ($row = mysqli_fetch_row($result2)) {
+            foreach ($row as $field => $value) {
+                if ($value != "") $_SESSION["wyplywy"] = $value;
+                else $_SESSION["wyplywy"] = 0;
+            }
+        }
+    } else $_SESSION["wyplywy"] = "0 zł";
     ?>
 
     <header></header>
@@ -108,8 +120,8 @@ if (isset($_SESSION['user_id'])) {
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Stan konta</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $_SESSION["srodki"]; ?></div>
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Stan konta</div>
+                                        <div class="h5 mb-0 font-weight-bold text-primary-800"><?php echo $_SESSION["srodki"] . " zł"; ?></div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -124,8 +136,8 @@ if (isset($_SESSION['user_id'])) {
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-warning    text-uppercase mb-1">Wpływy (ten miesiąc)</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $_SESSION["ilosc"]; ?></div>
+                                        <div class="text-xs font-weight-bold text-success    text-uppercase mb-1">Wpływy (ten miesiąc)</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $_SESSION["wplywy"] . " zł"; ?></div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -140,15 +152,10 @@ if (isset($_SESSION['user_id'])) {
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Wydatki (ten miesiąc)</div>
+                                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Wydatki (ten miesiąc)</div>
                                         <div class="row no-gutters align-items-center">
                                             <div class="col-auto">
-                                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="progress progress-sm mr-2">
-                                                    <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
+                                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?php echo $_SESSION["wyplywy"] . " zł"; ?></div>
                                             </div>
                                         </div>
                                     </div>
@@ -165,8 +172,9 @@ if (isset($_SESSION['user_id'])) {
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">?</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Różnica (ten miesiąc)</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo ($_SESSION["wplywy"] - $_SESSION["wyplywy"]) . " zł"; ?>
+                                        </div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-comments fa-2x text-gray-300"></i>
@@ -184,19 +192,7 @@ if (isset($_SESSION['user_id'])) {
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-                                <div class="dropdown no-arrow">
-                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Dropdown Header:</div>
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                    </div>
-                                </div>
+                                <h6 class="m-0 font-weight-bold text-primary">Tytuł wykresu</h6>
                             </div>
                             <!-- Card Body -->
                             <div class="card-body">

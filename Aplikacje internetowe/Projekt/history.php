@@ -47,7 +47,7 @@ if (isset($_SESSION['user_id'])) {
           <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav mr-auto">
               <li class="nav-item">
-                <a class="nav-link" style="color:whitesmoke" href="#">Przelewy </a>
+                <a class="nav-link" style="color:whitesmoke" href="przelewy.php">Przelewy </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" style="color:whitesmoke" href="#">Doładowania</a>
@@ -56,7 +56,7 @@ if (isset($_SESSION['user_id'])) {
                 <a class="nav-link" style="color:whitesmoke" href="#">Pomoc i kontakt</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" style="color:whitesmoke" href="#">Historia</a>
+                <a class="nav-link" style="color:whitesmoke" href="history.php">Historia</a>
               </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -77,7 +77,7 @@ if (isset($_SESSION['user_id'])) {
               <h4 style="color:red">Przelewy</h4>
             </div>
             <div class="card-body">
-              <div class="table-responsive">
+              <div>
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
@@ -87,14 +87,6 @@ if (isset($_SESSION['user_id'])) {
                       <th>Ilość</th>
                     </tr>
                   </thead>
-                  <tfoot>
-                    <tr>
-                      <th>ID_od</th>
-                      <th>ID_do</th>
-                      <th>Data</th>
-                      <th>Ilość</th>
-                    </tr>
-                  </tfoot>
                   <tbody>
 
                     <?php

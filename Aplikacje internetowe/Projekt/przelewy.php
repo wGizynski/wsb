@@ -87,8 +87,8 @@ if (isset($_SESSION['user_id'])) {
         if (empty(trim($_POST["data"]))) {
             $data_err = "Proszę wprowadzić date.";
         } else {
-            $data = $_POST["data"];
-            $data = date("Y-m-d", strtotime($data));
+            $rawdate = htmlentities($_POST['data']);
+            $data = date("Y-m-d", strtotime($rawdate));
         }
 
         if (empty(trim($_POST["amount"]))) {
@@ -99,9 +99,10 @@ if (isset($_SESSION['user_id'])) {
             $amount = $_POST["amount"];
         }
 
+ 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (empty($user_id_err) && empty($adress_err) && empty($data_err) && empty($amount_err)) {
-                $sql3 = "Insert into transakcje (ID_from, ID_TO, DATA, ilosc) values ($logged_user, $user_id, $data, $amount)  ";
+                $sql3 = "Insert into transakcje (ID_from, ID_TO, DATA, ilosc) values ($logged_user, $user_id, '$data', $amount)  ";
                 $wybik = mysqli_query($conn, $sql3);
                 $sql4 = "update users set srodki=(srodki-$amount) where user_id = $logged_user";
                 $wybik2 = mysqli_query($conn, $sql4);
@@ -110,7 +111,7 @@ if (isset($_SESSION['user_id'])) {
                 $_SESSION["srodki"] = ($_SESSION["srodki"] - $amount);
                 header("location: dashboard.php");
             }
-        }
+        } 
     }
     ?>
 

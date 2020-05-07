@@ -38,55 +38,34 @@ if (isset($_SESSION['user_id'])) {
         die("Connection failed: " . mysqli_connect_error());
     }
 
-    $card_id_err = "";
-    $adress_err = "";
-    $data_err = "";
-    $amount_err = "";
+    $Imie_err = "";
+    $Nazwisko_err = "";
+    $succes = "";
+
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Check if username is empty
-        if (empty(trim($_POST["card_id"]))) {
-            $card_id_err = "Proszę wprowadzić numer karty użytkownika.";
-        } else if ($_POST["card_id"] == $_SESSION['card_id']) {
-            $card_id_err = "Nie można utworzyć przelewu na własny rachunek";
+        if (empty(trim($_POST["Imie"]))) {
+            $Imie_err = "Proszę wprowadzić imię użytkownika.";
         } else {
-            $card_id = $_POST["card_id"];
+            $Imie = $_POST["Imie"];
         }
 
-        // Check if password is empty
-        if (empty(trim($_POST["adress"]))) {
-            $adress_err = "Proszę wprowadzić adres.";
+        if (empty(trim($_POST["Nazwisko"]))) {
+            $Nazwisko_err = "Proszę wprowadzić nazwisko użytkownika.";      
         } else {
-            $adress = $_POST["adress"];
-        }
-
-        if (empty(trim($_POST["data"]))) {
-            $data_err = "Proszę wprowadzić date.";
-        } else {
-            $rawdate = htmlentities($_POST['data']);
-            $data = date("Y-m-d", strtotime($rawdate));
-        }
-
-        if (empty(trim($_POST["amount"]))) {
-            $amount_err = "Proszę wprowadzić kwote.";
-        } else if ($_POST["amount"] > $_SESSION['srodki']) {
-            $amount_err = "Nie masz takich środków.";
-        } else {
-            $amount = $_POST["amount"];
+            $Nazwisko = $_POST["Nazwisko"];
         }
 
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            if (empty($card_id_err) && empty($adress_err) && empty($data_err) && empty($amount_err)) {
-                $sql3 = "Insert into transakcje (ID_from, ID_TO, DATA, ilosc) values ($_SESSION[Main_card_ID], $card_id, '$data', $amount)  ";
-                mysqli_query($conn, $sql3);
-                $sql4 = "update credit_cards set Resources=(Resources-$amount) where Credit_card_ID = $_SESSION[Main_card_ID]";
-                mysqli_query($conn, $sql4);
-                $sql5 = "update credit_cards set Resources=(Resources+$amount) where Credit_card_ID = $card_id";
-                mysqli_query($conn, $sql5);
-                $_SESSION['Resources'] = ($_SESSION['Resources']- $amount);
-                $Resources=$Resources-$amount;
-                header("location: dashboard.php");
+            if (empty($Imie_err) && empty($Nazwisko_err)) {
+                $sql = "update users set Imie='$Imie', Nazwisko='$Nazwisko' where user_id = $_SESSION[user_id]";
+                $_SESSION['Imie'] = $Imie;
+                $_SESSION['Nazwisko'] = $Nazwisko;
+                $wybik = mysqli_query($conn, $sql);
+                $succes = "Dane zostały zmodyfikowane";
+
             }
         }
     }
@@ -103,7 +82,6 @@ if (isset($_SESSION['user_id'])) {
         <section id="mid">
             <section id="mid_left"> </section>
             <section id="middle">
-
 
                 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #c00000; border-radius: 3px;">
                     <a class="navbar-brand" style="color:whitesmoke" href="dashboard.php">Dashboard</a>
@@ -134,30 +112,21 @@ if (isset($_SESSION['user_id'])) {
 
                 <div class="container login-container" style="float: left; width: 100%; max-width: 1270px;">
                     <div class="col-md-6 login-form-1" style="max-width: 100%;">
-                        <h3>Przelew</h3>
+                        <h3>Ustawienia konta</h3>
                         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                             <div style="width:50%; margin-left:auto; margin-right:auto">
 
-                                <div class="form-group <?php echo (!empty($card_id_err)) ? 'has-error' : ''; ?>">
-                                    <input type="text" name="card_id" class="form-control" placeholder="nr karty odbiorcy *">
-                                    <span class="help-block"><?php echo $card_id_err; ?></span>
+                                <div class="form-group <?php echo (!empty($Imie_err)) ? 'has-error' : ''; ?>">
+                                    <a> Imie </a> <input type="text" name="Imie" class="form-control" placeholder=<?php echo $_SESSION['Imie'] ?>>
+                                    <span class="help-block"><?php echo $Imie_err; ?></span>
                                 </div>
-                                <div class="form-group <?php echo (!empty($adress_err)) ? 'has-error' : ''; ?>">
-                                    <input type="text" name="adress" class="form-control" placeholder="Adres *">
-                                    <span class="help-block"><?php echo $adress_err; ?></span>
-                                </div>
-
-                                <div class="form-group <?php echo (!empty($amount_err)) ? 'has-error' : ''; ?>">
-                                    <input type="text" name="amount" class="form-control" placeholder="Kwota *">
-                                    <?php echo $amount_err; ?></span>
-                                </div>
-
-                                <div class="form-group <?php echo (!empty($data_err)) ? 'has-error' : ''; ?>">
-                                    <input type="date" name="data" class="form-control">
-                                    <?php echo $data_err; ?></span>
+                                <div class="form-group <?php echo (!empty($Nazwisko_err)) ? 'has-error' : ''; ?>">
+                                    <a> Nazwisko </a> <input type="text" name="Nazwisko" class="form-control" placeholder=<?php echo $_SESSION['Nazwisko'] ?>>
+                                    <span class="help-block"><?php echo $Nazwisko_err; ?></span>
                                 </div>
 
                                 <input type="submit" class="btnSubmit" value="Wykonaj">
+                                <br> <span class="help-block"><?php echo $succes; ?></span>
                             </div>
                         </form>
                     </div>

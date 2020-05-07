@@ -98,6 +98,33 @@ td{
   width: 100px;
 }
 
+/* -----------------Cards---------------------- */
+
+.master_card{
+  width: 20%;
+  height: 100px;
+  float: left;
+  content:url("imgs/master_card.png")
+}
+
+.visa_card{
+  width: 20%;
+  height: 100px;
+  float: left;
+  content:url("imgs/visa_card.png")
+}
+
+.card_info{
+  width: 25%;
+  height: 100px;
+  float: left;
+}
+.card_name{
+  width: 20%;
+  height: 100%;
+  float: left;
+}
+
 /* -----------------login---------------------- */
 
 .login-container{

@@ -61,7 +61,29 @@ if (isset($_SESSION['user_id'])) {
             }
         }
     } else $_SESSION["wyplywy"] = "0 zł";
+
+    $sql3 = "SELECT Type, Resources, create_date, Credit_card_ID  FROM credit_cards where $_SESSION[user_id]=users_ID;";
+    $result3 =  mysqli_query($conn, $sql3);
+
+    $sql4 = "SELECT Resources from credit_cards where credit_cards.Credit_card_ID=$_SESSION[Main_card_ID] LIMIT 1;";
+    $result4 =  mysqli_query($conn, $sql4);
+    if (mysqli_num_rows($result4) > 0) {
+        $row = mysqli_fetch_row($result4);
+        foreach ($row as $field => $value) {
+            $Resources = $value;
+            $_SESSION['Resources']=$Resources;
+        }
+    } else $Resources = 0;
+
+    if (isset($_POST['submit'])) {      
+        $_SESSION["Main_card_ID"] = $_POST['submit'];
+        $sql5 = "Update users set Main_card_ID=$_POST[submit] where $_SESSION[user_id]=users.user_id";
+        mysqli_query($conn, $sql5);
+                
+        header("location: index.php");
+    }
     ?>
+
 
     <header></header>
     <section id="content">
@@ -96,6 +118,7 @@ if (isset($_SESSION['user_id'])) {
                             </li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
+                            <li> <a href="settings.php" class="nav-link" style="color:whitesmoke"> Ustawienia <img src="imgs/settings.png" width="24px" height="24px"> </a> </li>
                             <li><a href="logout.php" class="nav-link" style="color:whitesmoke"> wyloguj sie</a></li>
                         </ul>
                     </div>
@@ -121,7 +144,7 @@ if (isset($_SESSION['user_id'])) {
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Stan konta</div>
-                                        <div class="h5 mb-0 font-weight-bold text-primary-800"><?php echo $_SESSION["srodki"] . " zł"; ?></div>
+                                        <div class="h5 mb-0 font-weight-bold text-primary-800"><?php echo $Resources . " zł"; ?></div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -192,14 +215,35 @@ if (isset($_SESSION['user_id'])) {
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Tytuł wykresu</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Twoje karty</h6>
                             </div>
                             <!-- Card Body -->
-                            <div class="card-body">
-                                <div class="chart-area">
-                                    <canvas id="myAreaChart"></canvas>
-                                </div>
-                            </div>
+                            <?php
+                            if (mysqli_num_rows($result3) > 0) {
+                                while ($row = mysqli_fetch_row($result3)) {
+                                    echo "<div class='card-header py-3 d-flex flex-row align-items-center justify-content-between'>";
+                                    foreach ($row as $field => $value) {
+                                        if ($field == 0) {
+                                            if ($value == 0) echo "<div class='visa_card'> </div> <div class='card_name'> VISA </div>";
+                                            else echo "<div class='master_card'> </div> <div class='card_name'> MASTER CARD </div>";
+                                        } else if ($field == 1) {
+                                            echo "<div class='card_info'> Środki: <br> $value <br> ";
+                                        } else if ($field == 2) {
+                                            echo "Data utworzenia: <br> $value </div>";
+                                        } else {
+                                            if ($value == $_SESSION["Main_card_ID"]) echo "<div class='card_info'>  używasz <br><br> <br>id karty: $value <br> </div>";
+                                            else echo " 
+                                            <div class='card_info'> 
+                                                 <form method='POST'> 
+                                                    <button class='btn btn-primary' type='submit' onclick='change_card($value)' name='submit' value=$value> zmien </button>
+                                                </form> 
+                                                <br> id karty: $value  </div>";
+                                        }
+                                    }
+                                    echo "</div>";
+                                }
+                            } ?>
+
                         </div>
                     </div>
 

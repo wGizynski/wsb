@@ -57,7 +57,7 @@
     // Validate credentials
     if (empty($username_err) && empty($password_err)) {
       // Prepare a select statement
-      $sql = "SELECT user_id, username, srodki, password FROM users WHERE username = ?";
+      $sql = "SELECT user_id, username, srodki, Imie, Nazwisko, Main_card_ID, password FROM users WHERE username = ?";
 
       if ($stmt = mysqli_prepare($link, $sql)) {
         // Bind variables to the prepared statement as parameters
@@ -73,7 +73,7 @@
           // Check if username exists, if yes then verify password
           if (mysqli_stmt_num_rows($stmt) == 1) {
             // Bind result variables
-            mysqli_stmt_bind_result($stmt, $user_id, $username, $srodki, $hashed_password);
+            mysqli_stmt_bind_result($stmt, $user_id, $username, $srodki, $Imie, $Nazwisko, $Main_card_ID, $hashed_password);
             if (mysqli_stmt_fetch($stmt)) {
               if (password_verify($password, $hashed_password)) {
                 // Password is correct, so start a new session
@@ -84,6 +84,9 @@
                 $_SESSION["user_id"] = $user_id;
                 $_SESSION["login_user"] = $username;
                 $_SESSION["srodki"] = $srodki;
+                $_SESSION["Imie"] = $Imie;
+                $_SESSION["Nazwisko"] = $Nazwisko;
+                $_SESSION["Main_card_ID"] = $Main_card_ID;
 
                 // Redirect user to welcome page
                 header("location: dashboard.php");

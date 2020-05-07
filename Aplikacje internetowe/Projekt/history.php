@@ -60,6 +60,7 @@ if (isset($_SESSION['user_id'])) {
               </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+              <li> <a href="settings.php" class="nav-link" style="color:whitesmoke"> Ustawienia <img src="imgs/settings.png" width="24px" height="24px"> </a> </li>
               <li><a href="logout.php" class="nav-link" style="color:whitesmoke"> wyloguj sie</a></li>
             </ul>
           </div>
@@ -105,6 +106,8 @@ if (isset($_SESSION['user_id'])) {
                     $sql = "SELECT ID_From, ID_To, data, ilosc FROM transakcje where $_SESSION[user_id]=ID_From OR $_SESSION[user_id]=ID_To;";
                     $result = mysqli_query($conn, $sql);
 
+                    $sql = "SELECT ID_From, ID_To, data, ilosc FROM transakcje join credit_cards on transakcje.ID_from = credit_cards.Credit_card_ID and transakcje.ID_TO-credit_cards.Credit_card_ID where users_ID=$_SESSION[user_id];";
+                    $result = mysqli_query($conn, $sql);
                     if (mysqli_num_rows($result) > 0) {
                       // output data of each row
 

@@ -75,6 +75,15 @@ if (isset($_SESSION['user_id'])) {
         $sql5 = "Update users set Main_card_ID=$_POST[submit] where $_SESSION[user_id]=users.user_id";
         mysqli_query($conn, $sql5);
 
+        $sql41 = "SELECT Resources from credit_cards where credit_cards.Credit_card_ID=$_SESSION[Main_card_ID] LIMIT 1;";
+    $result41 =  mysqli_query($conn, $sql41);
+    if (mysqli_num_rows($result4) > 0) {
+        $row = mysqli_fetch_row($result4);
+        foreach ($row as $field => $value) {
+            $Resources = $value;
+            $_SESSION['Resources'] = $Resources;
+        }
+    } else $Resources = 0; 
         header("location: index.php");
     }
     ?>

@@ -28,36 +28,27 @@
       <section id="mid_left"> </section>
       <section id="middle">
 
-      <?php include('menu.php') ?>
+        <?php include('menu.php') ?>
 
         <?php
         // Include config file
         require_once "config.php";
 
-        // Define variables and initialize with empty values
         $username = $password = $confirm_password = "";
         $username_err = $password_err = $confirm_password_err = "";
 
-        // Processing form data when form is submitted
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-          // Validate username
           if (empty(trim($_POST["username"]))) {
             $username_err = "Proszę wpisać nazwę użtkownika.";
           } else {
-            // Prepare a select statement
             $sql = "SELECT user_id FROM users WHERE username = ?";
 
             if ($stmt = mysqli_prepare($link, $sql)) {
-              // Bind variables to the prepared statement as parameters
               mysqli_stmt_bind_param($stmt, "s", $param_username);
 
-              // Set parameters
               $param_username = trim($_POST["username"]);
-
-              // Attempt to execute the prepared statement
               if (mysqli_stmt_execute($stmt)) {
-                /* store result */
                 mysqli_stmt_store_result($stmt);
 
                 if (mysqli_stmt_num_rows($stmt) == 1) {
@@ -68,8 +59,6 @@
               } else {
                 echo "Oops! Something went wrong. Please try again later.";
               }
-
-              // Close statement
               mysqli_stmt_close($stmt);
             }
           }
@@ -83,7 +72,6 @@
             $password = trim($_POST["password"]);
           }
 
-          // Validate confirm password
           if (empty(trim($_POST["confirm_password"]))) {
             $confirm_password_err = "Proszę potwierdź hasło.";
           } else {
@@ -93,34 +81,38 @@
             }
           }
 
-          // Check input errors before inserting in database
           if (empty($username_err) && empty($password_err) && empty($confirm_password_err)) {
 
-            // Prepare an insert statement
             $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+            $sql2 = "SELECT user_id from users order by created_at desc limit 1";
+            $result = mysqli_query($link, $sql2);
+            if (mysqli_num_rows($result) > 0) {
+              while ($row = mysqli_fetch_row($result)) {
+                echo "<tr ";
+                foreach ($row as $field => $value) {
+                  $user_id = $value + 1;
+                }
+              }
+            } else $user_id = 1;
+
+            $card_type = $_POST["card_type"];
+            $sql3 = "Insert into credit_cards (users_ID, Type, Resources) values ($user_id, $card_type, 1000)";
+            mysqli_query($link, $sql3);
 
             if ($stmt = mysqli_prepare($link, $sql)) {
-              // Bind variables to the prepared statement as parameters
               mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_password);
 
-              // Set parameters
               $param_username = $username;
-              $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
+              $param_password = password_hash($password, PASSWORD_DEFAULT);
 
-              // Attempt to execute the prepared statement
               if (mysqli_stmt_execute($stmt)) {
-                // Redirect to login page
                 header("location: index.php");
               } else {
                 echo "Coś poszło nie tak. Prosze spróbować później";
               }
-
-              // Close statement
               mysqli_stmt_close($stmt);
             }
           }
-
-          // Close connection
           mysqli_close($link);
         }
         ?>
@@ -144,6 +136,15 @@
               <input type="password" name="confirm_password" class="form-control" value="<?php echo $confirm_password; ?>">
               <span class="help-block"><?php echo $confirm_password_err; ?></span>
             </div>
+
+            <div class="form-group">
+              <label>Rodzaj karty</label> <br>
+              <select class="form-control form-control-lg" name="card_type">
+                <option value="0">Visa</option>
+                <option value="1"> Master Card</option>
+              </select>
+            </div>
+
             <div class="form-group">
               <input type="submit" class="btn btn-danger" value="Zarejestruj się">
             </div>
@@ -153,7 +154,7 @@
 
       </section>
       <section id="mid_right"> </section>
-      <?php include ('footer.php'); ?>
+      <?php include('footer.php'); ?>
     </section>
   </section>
 

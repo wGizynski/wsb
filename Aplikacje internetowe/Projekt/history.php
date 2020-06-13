@@ -13,12 +13,11 @@ if (isset($_SESSION['user_id'])) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>WSBank Historia  </title>  
+  <title>WSBank Historia </title>
   <link rel="icon" href="imgs/favicon.ico">
   <link rel="stylesheet" href="styles.css">
   <link href="css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
 </head>
 
 <body>
@@ -37,13 +36,10 @@ if (isset($_SESSION['user_id'])) {
 
         <?php include('menu.php') ?>
 
-        <!-- Begin Page Content -->
         <div class="container-fluid">
 
-          <!-- Page Heading -->
           <h1 class="h1 mb-2 text-gray-800" style="margin-top:20px">Historia przelewów</h1>
 
-          <!-- DataTales Example -->
           <div class="card shadow mb-4" style="margin-top:40px">
             <div class="card-header py-3">
               <h4 style="color:red">Przelewy</h4>
@@ -67,7 +63,6 @@ if (isset($_SESSION['user_id'])) {
                     $result = mysqli_query($link, $sql);
 
                     if (mysqli_num_rows($result) > 0) {
-                      // output data of each row
                       while ($row = mysqli_fetch_row($result)) {
                         echo "<tr ";
                         foreach ($row as $field => $value) {
@@ -91,25 +86,20 @@ if (isset($_SESSION['user_id'])) {
               </div>
             </div>
           </div>
-
         </div>
-        <!-- /.container-fluid -->
-
 
       </section>
       <section id="mid_right"> </section>
 
-      <?php include ('footer.php'); ?>
+      <?php include('footer.php'); ?>
 
     </section>
   </section>
 
-  <!-- Page level plugins -->
   <script src="vendor/datatables/jquery.dataTables.min.js"></script>
   <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
-  <!-- Page level custom scripts -->
   <script src="js/demo/datatables-demo.js"></script>
+
 </body>
 
 </html>

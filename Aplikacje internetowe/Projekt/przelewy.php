@@ -34,7 +34,7 @@ if (isset($_SESSION['user_id'])) {
         // Check if username is empty
         if (empty(trim($_POST["card_id"]))) {
             $card_id_err = "Proszę wprowadzić numer karty użytkownika.";
-        } else if ($_POST["card_id"] == $_SESSION['card_id']) {
+        } else if ($_POST["card_id"] ==  $_SESSION["Main_card_ID"]) {
             $card_id_err = "Nie można utworzyć przelewu na własny rachunek";
         } else {
             $card_id = $_POST["card_id"];
@@ -56,7 +56,7 @@ if (isset($_SESSION['user_id'])) {
 
         if (empty(trim($_POST["amount"]))) {
             $amount_err = "Proszę wprowadzić kwote.";
-        } else if ($_POST["amount"] > $_SESSION['srodki']) {
+        } else if ($_POST["amount"] > $_SESSION['Resources']) {
             $amount_err = "Nie masz takich środków.";
         } else {
             $amount = $_POST["amount"];
@@ -71,7 +71,7 @@ if (isset($_SESSION['user_id'])) {
                 mysqli_query($link, $sql4);
                 $sql5 = "update credit_cards set Resources=(Resources+$amount) where Credit_card_ID = $card_id";
                 mysqli_query($link, $sql5);
-                $_SESSION['Resources'] = ($_SESSION['Resources']- $amount);
+                $_SESSION['Resources'] = ($_SESSION['Resources']- $amount);  
                 $Resources=$Resources-$amount;
                 header("location: dashboard.php");
             }

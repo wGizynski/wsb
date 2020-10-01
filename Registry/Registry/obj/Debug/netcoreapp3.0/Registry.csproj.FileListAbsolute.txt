@@ -1,0 +1,11 @@
+C:\Users\w.gizynski\source\repos\Registry\Registry\bin\Debug\netcoreapp3.0\Registry.exe
+C:\Users\w.gizynski\source\repos\Registry\Registry\bin\Debug\netcoreapp3.0\Registry.deps.json
+C:\Users\w.gizynski\source\repos\Registry\Registry\bin\Debug\netcoreapp3.0\Registry.runtimeconfig.json
+C:\Users\w.gizynski\source\repos\Registry\Registry\bin\Debug\netcoreapp3.0\Registry.runtimeconfig.dev.json
+C:\Users\w.gizynski\source\repos\Registry\Registry\bin\Debug\netcoreapp3.0\Registry.dll
+C:\Users\w.gizynski\source\repos\Registry\Registry\bin\Debug\netcoreapp3.0\Registry.pdb
+C:\Users\w.gizynski\source\repos\Registry\Registry\obj\Debug\netcoreapp3.0\Registry.AssemblyInfoInputs.cache
+C:\Users\w.gizynski\source\repos\Registry\Registry\obj\Debug\netcoreapp3.0\Registry.AssemblyInfo.cs
+C:\Users\w.gizynski\source\repos\Registry\Registry\obj\Debug\netcoreapp3.0\Registry.dll
+C:\Users\w.gizynski\source\repos\Registry\Registry\obj\Debug\netcoreapp3.0\Registry.pdb
+C:\Users\w.gizynski\source\repos\Registry\Registry\obj\Debug\netcoreapp3.0\Registry.csprojAssemblyReference.cache
